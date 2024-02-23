@@ -1,4 +1,4 @@
-package init_env
+package Config
 
 import "github.com/spf13/viper"
 

@@ -2,20 +2,23 @@ package main
 
 import (
 	"log"
-	init_env "main/config"
+	Config "main/config"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-var config init_env.Config
+var config Config.Config
 
 func init() {
 	var err error
-	config, err = init_env.LoadConfig(".")
+	config, err = Config.LoadConfig(".")
 	if err != nil {
 		log.Fatal("🚀 Could not load environment variables", err)
 	}
+
+    Config.ConnectDB(&config)
 }
 
 func main() {

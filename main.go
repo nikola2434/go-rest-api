@@ -3,13 +3,20 @@ package main
 import (
 	"log"
 	Config "main/config"
+	controller "main/controllers"
+	"main/routes"
 
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-var config Config.Config
+var (
+	server              *gin.Engine
+	config              Config.Config
+	UserController      controller.UserController
+	UserRouteController routes.UserRouteController
+)
 
 func init() {
 	var err error
@@ -18,19 +25,25 @@ func init() {
 		log.Fatal("🚀 Could not load environment variables", err)
 	}
 
-    Config.ConnectDB(&config)
+	Config.ConnectDB(&config)
+
+	UserController = controller.NewUserController(Config.DB)
+	UserRouteController = routes.NewUserRouteController(UserController)
+	server = gin.Default()
 }
 
 func main() {
 
-	route := gin.Default()
-	route.GET("/ping", func(context *gin.Context) {
+	router := server.Group("/api")
+	router.GET("/ping", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
-			"message": "qwe",
+			"message": "Welcome!",
 		})
 	})
 
-	err := route.Run("localhost:" + config.ServerPort)
+	UserRouteController.UserRoute(router)
+
+	err := server.Run("localhost:" + config.ServerPort)
 	if err != nil {
 		panic(err)
 	}

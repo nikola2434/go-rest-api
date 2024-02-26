@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	server *gin.Engine
-	config Config.Config
+	Server    *gin.Engine
+	ConfigApp Config.Config
 
 	UserController      controller.UserController
 	UserRouteController routes.UserRouteController
@@ -24,24 +24,24 @@ var (
 
 func init() {
 	var err error
-	config, err = Config.LoadConfig(".")
+	ConfigApp, err = Config.LoadConfig(".")
 	if err != nil {
 		log.Fatal("🚀 Could not load environment variables", err)
 	}
 
-	Config.ConnectDB(&config)
+	Config.ConnectDB(&ConfigApp)
 
 	UserController = controller.NewUserController(Config.DB)
 	UserRouteController = routes.NewUserRouteController(UserController)
 
 	AuthController = controller.NewAuthController(Config.DB)
 	AuthRouterController = routes.NewAuthRouter(AuthController)
-	server = gin.Default()
+	Server = gin.Default()
 }
 
 func main() {
 
-	router := server.Group("/api")
+	router := Server.Group("/api")
 	router.GET("/ping", func(context *gin.Context) {
 		context.JSON(http.StatusOK, gin.H{
 			"message": "Welcome!",
@@ -51,7 +51,7 @@ func main() {
 	UserRouteController.UserRoute(router)
 	AuthRouterController.AuthRouter(router)
 
-	err := server.Run("localhost:" + config.ServerPort)
+	err := Server.Run("localhost:" + ConfigApp.ServerPort)
 	if err != nil {
 		panic(err)
 	}

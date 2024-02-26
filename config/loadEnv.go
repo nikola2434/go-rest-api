@@ -3,12 +3,13 @@ package Config
 import "github.com/spf13/viper"
 
 type Config struct {
-	ServerPort     string `mapstructure:"SERVER_PORT"`
-	DBHost         string `mapstructure:"POSTGRES_HOST"`
-	DBUserName     string `mapstructure:"POSTGRES_USER"`
-	DBUserPassword string `mapstructure:"POSTGRES_PASSWORD"`
-	DBName         string `mapstructure:"POSTGRES_DB"`
-	DBPort         string `mapstructure:"POSTGRES_PORT"`
+	ServerPort            string `mapstructure:"SERVER_PORT"`
+	DBHost                string `mapstructure:"POSTGRES_HOST"`
+	DBUserName            string `mapstructure:"POSTGRES_USER"`
+	DBUserPassword        string `mapstructure:"POSTGRES_PASSWORD"`
+	DBName                string `mapstructure:"POSTGRES_DB"`
+	DBPort                string `mapstructure:"POSTGRES_PORT"`
+	AccessTokenPrivateKey string `mapstructure:"ACCESS_TOKEN_PRIVATE_KEY"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
